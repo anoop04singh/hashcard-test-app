@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      // Add any specific aliasing here if needed
-    },
-  },
+    resolve: {
+        alias: {
+          // Use the direct path to the ESM build of ethers
+        },
+      },
   optimizeDeps: {
     include: ['@reown/appkit', '@reown/appkit-adapter-wagmi', 'viem', 'wagmi'], // Pre-bundle these dependencies
   },
