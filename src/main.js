@@ -52,7 +52,8 @@ document.getElementById('open-connect-modal').addEventListener('click', async ()
     try {
         console.log("Opening Reown wallet connection modal...");
         await modal.open(); // Open Reown wallet connection modal
-        console.log("Wallet connection successful. Initializing contract...");
+        const address = modal.getAddress();
+        console.log("Wallet connection successful. Initializing contract...",address);
         await initializeContract(); // Initialize the contract after wallet connection
         console.log("Contract initialized successfully. Transitioning to initial screen...");
         transitionTo(initialScreen); // Show the next step (scan or manual entry options)
@@ -67,17 +68,19 @@ document.getElementById('open-network-modal').addEventListener('click', () => mo
 // Initialize Contract
 async function initializeContract() {
     console.log("Checking Ethereum provider...");
-    if (!window.ethereum) {
-        console.error("Ethereum provider (e.g., MetaMask) not found.");
-        alert("Please install MetaMask or another Ethereum wallet provider.");
+    if (!modal.getIsConnectedState()) {
+        console.error("Wallet Connection Failed");
+        alert("NO wallet Connected.");
         return;
     }
 
     try {
         console.log("Requesting wallet access...");
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        //await window.ethereum.request({ method: 'eth_requestAccounts' });
         console.log("Wallet access granted. Setting up provider and signer...");
-        const provider = new ethers.BrowserProvider(window.ethereum);
+        //console.log(window.ethereum);
+        const provider = new ethers.BrowserProvider(modal.getWalletProvider());
+        console.log(provider);
         signer = await provider.getSigner();
         contract = new ethers.Contract(contractAddress, contractABI, signer);
         console.log("Contract instance created successfully.");
